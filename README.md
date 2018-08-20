@@ -14,7 +14,7 @@ Rebar 3.6.1
 
 ## Usage
 
-To boot straight to a iex prompt in the image:
+To boot straight to a erl prompt in the image:
 
 ```shell
 $ docker run --rm -i -t beardedeagle/alpine-erlang-builder erl
