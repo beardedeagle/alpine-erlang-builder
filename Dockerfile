@@ -5,7 +5,7 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2018-08-24 \
+ENV REFRESHED_AT=2018-08-24a \
   OTP_VER=21.0.6 \
   REBAR2_VER=2.6.4 \
   REBAR3_VER=3.6.1 \
@@ -21,7 +21,7 @@ RUN set -xe \
   && rm -rf /root/.cache \
   && rm -rf /var/cache/apk/*
 
-FROM base_stage as erlang_stage
+FROM base_stage as deps_stage
 
 RUN set -xe \
   && apk add --no-cache --virtual .build-deps \
@@ -44,7 +44,11 @@ RUN set -xe \
     tar \
     unixodbc unixodbc-dev \
     zlib zlib-dev \
-  && update-ca-certificates --fresh \
+  && update-ca-certificates --fresh
+
+FROM deps_stage as erlang_stage
+
+RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
   && OTP_DOWNLOAD_SHA256="a7da6ad97106b5ba087394658d41174ac1123d1f017bce02fbb9e43b49676f40" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
@@ -125,7 +129,7 @@ RUN set -xe \
   && HOME=$PWD ./bootstrap \
   && install -v ./rebar3 /usr/local/bin/
 
-FROM erlang_stage as stage
+FROM deps_stage as stage
 
 COPY --from=rebar2_stage /usr/local /opt/rebar2
 COPY --from=rebar3_stage /usr/local /opt/rebar3
