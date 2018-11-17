@@ -5,8 +5,8 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2018-10-27 \
-  OTP_VER=21.1.1 \
+ENV REFRESHED_AT=2018-11-17 \
+  OTP_VER=21.1.2 \
   REBAR2_VER=2.6.4 \
   REBAR3_VER=3.6.2 \
   TERM=xterm \
@@ -50,7 +50,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="a6588243e9659960e184083f49b15ea37890e4cd9bb8aef84ba4180db68befc3" \
+  && OTP_DOWNLOAD_SHA256="3e3c893a4c025538c3508838b2f2f08842202449d161b755de7df08938e1e0d0" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
   && echo "$OTP_DOWNLOAD_SHA256  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
