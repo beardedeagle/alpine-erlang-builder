@@ -5,10 +5,10 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2018-11-17 \
-  OTP_VER=21.1.2 \
+ENV REFRESHED_AT=2018-11-23 \
+  OTP_VER=21.1.3 \
   REBAR2_VER=2.6.4 \
-  REBAR3_VER=3.6.2 \
+  REBAR3_VER=3.7.2 \
   TERM=xterm \
   LANG=C.UTF-8
 
@@ -50,7 +50,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="3e3c893a4c025538c3508838b2f2f08842202449d161b755de7df08938e1e0d0" \
+  && OTP_DOWNLOAD_SHA256="9a447e1debed355ff78f5d502dc8259139d5aed2362037e7cca9dc9919245eca" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
   && echo "$OTP_DOWNLOAD_SHA256  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
@@ -119,7 +119,7 @@ FROM erlang_stage as rebar3_stage
 
 RUN set -xe \
   && REBAR3_DOWNLOAD_URL="https://github.com/erlang/rebar3/archive/${REBAR3_VER}.tar.gz" \
-  && REBAR3_DOWNLOAD_SHA256="7f358170025b54301bce9a10ec7ad07d4e88a80eaa7b977b73b32b45ea0b626e" \
+  && REBAR3_DOWNLOAD_SHA256="1a68da5a6ee07e587bf51321f57a9ff9c06df6376bef775c2a84bd98dc228072" \
   && curl -fSL -o rebar3-src.tar.gz "$REBAR3_DOWNLOAD_URL" \
   && echo "$REBAR3_DOWNLOAD_SHA256  rebar3-src.tar.gz" | sha256sum -c - \
   && mkdir -p /usr/src/rebar3-src \
