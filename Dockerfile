@@ -5,10 +5,10 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2018-11-23 \
+ENV REFRESHED_AT=2018-11-24 \
   OTP_VER=21.1.3 \
   REBAR2_VER=2.6.4 \
-  REBAR3_VER=3.7.2 \
+  REBAR3_VER=3.7.4 \
   TERM=xterm \
   LANG=C.UTF-8
 
@@ -119,7 +119,7 @@ FROM erlang_stage as rebar3_stage
 
 RUN set -xe \
   && REBAR3_DOWNLOAD_URL="https://github.com/erlang/rebar3/archive/${REBAR3_VER}.tar.gz" \
-  && REBAR3_DOWNLOAD_SHA256="1a68da5a6ee07e587bf51321f57a9ff9c06df6376bef775c2a84bd98dc228072" \
+  && REBAR3_DOWNLOAD_SHA256="3747ef351999caec65304839ecd9324ac8eec8c38210fb43dc598e3caed0a2c0" \
   && curl -fSL -o rebar3-src.tar.gz "$REBAR3_DOWNLOAD_URL" \
   && echo "$REBAR3_DOWNLOAD_SHA256  rebar3-src.tar.gz" | sha256sum -c - \
   && mkdir -p /usr/src/rebar3-src \
