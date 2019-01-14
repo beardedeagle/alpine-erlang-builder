@@ -9,7 +9,7 @@ No effort has been made to make this image suitable to run in unprivileged envir
 ```shell
 Alpine 3.8
 OTP/Erlang 21.2.2
-Rebar 3.7.5
+Rebar 3.8.0
 ```
 
 ## Usage
