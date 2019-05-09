@@ -5,10 +5,9 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2019-01-30 \
-  OTP_VER=21.2.4 \
-  REBAR2_VER=2.6.4 \
-  REBAR3_VER=3.8.0 \
+ENV REFRESHED_AT=2019-05-08 \
+  OTP_VER=21.3.8 \
+  REBAR3_VER=3.10.0 \
   TERM=xterm \
   LANG=C.UTF-8
 
@@ -50,7 +49,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="833d31ac102536b752e474dc6d69be7cc3e37d2d944191317312b30b1ea8ef0d" \
+  && OTP_DOWNLOAD_SHA256="e20df59eac5ec0f3d47cb775eb7cfb20438df24d93ba859959a18fe07abf3e6e" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
   && echo "$OTP_DOWNLOAD_SHA256  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
@@ -101,25 +100,11 @@ RUN set -xe \
   )" \
   && apk add --virtual $runDeps
 
-FROM erlang_stage as rebar2_stage
-
-RUN set -xe \
-  && REBAR_DOWNLOAD_URL="https://github.com/rebar/rebar/archive/${REBAR2_VER}.tar.gz" \
-  && REBAR_DOWNLOAD_SHA256="577246bafa2eb2b2c3f1d0c157408650446884555bf87901508ce71d5cc0bd07" \
-  && curl -fSL -o rebar-src.tar.gz "$REBAR_DOWNLOAD_URL" \
-  && echo "$REBAR_DOWNLOAD_SHA256  rebar-src.tar.gz" | sha256sum -c - \
-  && mkdir -p /usr/src/rebar-src \
-  && tar -xzf rebar-src.tar.gz -C /usr/src/rebar-src --strip-components=1 \
-  && rm rebar-src.tar.gz \
-  && cd /usr/src/rebar-src \
-  && ./bootstrap \
-  && install -v ./rebar /usr/local/bin/
-
 FROM erlang_stage as rebar3_stage
 
 RUN set -xe \
   && REBAR3_DOWNLOAD_URL="https://github.com/erlang/rebar3/archive/${REBAR3_VER}.tar.gz" \
-  && REBAR3_DOWNLOAD_SHA256="fc4d08037d39bcc651a4a749f8a5b1a10b2205527df834c2aee8f60725c3f431" \
+  && REBAR3_DOWNLOAD_SHA256="656b4a0bd75f340173e67a33c92e4d422b5ccf054f93ba35a9d780b545ee827e" \
   && curl -fSL -o rebar3-src.tar.gz "$REBAR3_DOWNLOAD_URL" \
   && echo "$REBAR3_DOWNLOAD_SHA256  rebar3-src.tar.gz" | sha256sum -c - \
   && mkdir -p /usr/src/rebar3-src \
@@ -131,11 +116,9 @@ RUN set -xe \
 
 FROM deps_stage as stage
 
-COPY --from=rebar2_stage /usr/local /opt/rebar2
 COPY --from=rebar3_stage /usr/local /opt/rebar3
 
 RUN set -xe \
-  && rsync -a /opt/rebar2/ /usr/local \
   && rsync -a /opt/rebar3/ /usr/local \
   && apk del .build-deps \
   && rm -rf /root/.cache \
