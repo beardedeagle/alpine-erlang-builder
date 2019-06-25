@@ -1,4 +1,4 @@
-FROM alpine:3.10.0 as base_stage
+FROM alpine:3.9.4 as base_stage
 
 LABEL maintainer="beardedeagle <randy@heroictek.com>"
 
