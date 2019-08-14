@@ -1,12 +1,12 @@
-FROM alpine:3.9.4 as base_stage
+FROM alpine:3.10.1 as base_stage
 
 LABEL maintainer="beardedeagle <randy@heroictek.com>"
 
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2019-06-24 \
-  OTP_VER=22.0.4 \
+ENV REFRESHED_AT=2019-08-14 \
+  OTP_VER=22.0.7 \
   REBAR3_VER=3.11.1 \
   TERM=xterm \
   LANG=C.UTF-8
@@ -49,7 +49,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="71b2fe49ed5ac386ebc189dd2e5f4b95b11b4427936be0e3c5695a903ea9ffcd" \
+  && OTP_DOWNLOAD_SHA256="04c090b55ec4a01778e7e1a5b7fdf54012548ca72737965b7aa8c4d7878c92bc" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
   && echo "$OTP_DOWNLOAD_SHA256  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
@@ -57,7 +57,9 @@ RUN set -xe \
   && tar -xzf otp-src.tar.gz -C $ERL_TOP --strip-components=1 \
   && rm otp-src.tar.gz \
   && ( cd $ERL_TOP \
+    && curl -fSL -o safe-signal-handling.patch https://git.alpinelinux.org/aports/plain/community/erlang/safe-signal-handling.patch \
     && ./otp_build autoconf \
+    && patch -p1 < safe-signal-handling.patch \
     && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
     && ./configure --build="$gnuArch" \
       --without-javac \
@@ -91,14 +93,7 @@ RUN set -xe \
   && find /usr/local -name src | xargs -r find | grep -v '\.hrl$' | xargs rm -v || true \
   && find /usr/local -name src | xargs -r find | xargs rmdir -vp || true \
   && scanelf --nobanner -E ET_EXEC -BF '%F' --recursive /usr/local | xargs -r strip --strip-all \
-  && scanelf --nobanner -E ET_DYN -BF '%F' --recursive /usr/local | xargs -r strip --strip-unneeded \
-  && runDeps="$( \
-    scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
-      | tr ',' '\n' \
-      | sort -u \
-      | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-  )" \
-  && apk add --virtual $runDeps
+  && scanelf --nobanner -E ET_DYN -BF '%F' --recursive /usr/local | xargs -r strip --strip-unneeded
 
 FROM erlang_stage as rebar3_stage
 
