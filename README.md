@@ -7,9 +7,9 @@ No effort has been made to make this image suitable to run in unprivileged envir
 ## Software/Language Versions
 
 ```shell
-Alpine 3.10.1
+Alpine 3.10.2
 OTP/Erlang 22.0.7
-Rebar 3.11.1
+Rebar 3.12.0
 ```
 
 ## Usage
