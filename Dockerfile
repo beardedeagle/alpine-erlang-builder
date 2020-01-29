@@ -1,12 +1,12 @@
-FROM alpine:3.11.2 as base_stage
+FROM alpine:3.11.3 as base_stage
 
 LABEL maintainer="beardedeagle <randy@heroictek.com>"
 
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2020-01-10 \
-  OTP_VER=22.2.1 \
+ENV REFRESHED_AT=2020-01-29 \
+  OTP_VER=22.2.4 \
   REBAR3_VER=3.13.0 \
   TERM=xterm \
   LANG=C.UTF-8
@@ -49,7 +49,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="65ab58ce79181895afc66716cc735a0ada4a3b705a525407d7e1d4c5deb95e72" \
+  && OTP_DOWNLOAD_SHA256="7aab2285b46462332a7fdad395d4629e6465d5da324cf7e081e8d62fdb5b38f1" \
   && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
   && echo "$OTP_DOWNLOAD_SHA256  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
