@@ -7,9 +7,9 @@ No effort has been made to make this image suitable to run in unprivileged envir
 ## Software/Language Versions
 
 ```shell
-Alpine 3.11.3
-OTP/Erlang 22.2.4
-Rebar 3.13.0
+Alpine 3.12.0
+OTP/Erlang 23.0.2
+Rebar 3.13.2
 ```
 
 ## Usage
@@ -18,8 +18,8 @@ To boot straight to a erl prompt in the image:
 
 ```shell
 $ docker run --rm -i -t beardedeagle/alpine-erlang-builder erl
-Erlang/OTP 22 [erts-10.6.2] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1]
+Erlang/OTP 23 [erts-11.0.2] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1]
 
-Eshell V10.6.2  (abort with ^G)
+Eshell V11.0.2  (abort with ^G)
 1>
 ```
