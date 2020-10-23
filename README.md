@@ -10,6 +10,7 @@ No effort has been made to make this image suitable to run in unprivileged envir
 Alpine 3.12.1
 OTP/Erlang 23.1.1
 Rebar 3.14.1
+Git 2.26.2
 ```
 
 ## Usage
