@@ -18,8 +18,8 @@ To boot straight to a erl prompt in the image:
 
 ```shell
 $ docker run --rm -i -t beardedeagle/alpine-erlang-builder erl
-Erlang/OTP 23 [erts-11.0.2] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1]
+Erlang/OTP 23 [erts-11.1.1] [source] [64-bit] [smp:12:12] [ds:12:12:10] [async-threads:1]
 
-Eshell V11.0.2  (abort with ^G)
+Eshell V11.1.1  (abort with ^G)
 1>
 ```
