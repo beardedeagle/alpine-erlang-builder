@@ -5,18 +5,16 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2020-10-22 \
+ENV REFRESHED_AT=2020-10-23 \
   OTP_VER=23.1.1 \
   REBAR3_VER=3.14.1 \
   TERM=xterm \
   LANG=C.UTF-8
 
 RUN set -xe \
-  && apk --update --no-cache upgrade \
-  && apk add --no-cache \
-    bash \
-    openssl \
-    lksctp-tools \
+  && apk --no-cache update \
+  && apk --no-cache upgrade \
+  && apk add --no-cache bash openssl \
   && rm -rf /root/.cache \
   && rm -rf /var/cache/apk/*
 
@@ -25,25 +23,24 @@ FROM base_stage as deps_stage
 RUN set -xe \
   && apk add --no-cache --virtual .build-deps \
     autoconf \
-    bash-dev \
-    binutils-gold \
-    ca-certificates \
-    curl curl-dev \
-    dpkg dpkg-dev \
+    curl \
+    dpkg \
+    dpkg-dev \
     g++ \
     gcc \
-    libc-dev \
-    openssl-dev \
-    linux-headers \
-    lksctp-tools-dev \
     make \
-    musl musl-dev \
-    ncurses ncurses-dev \
+    musl \
+    musl-dev \
+    ncurses \
+    ncurses-dev \
+    openssl \
+    openssl-dev \
     rsync \
+    sed \
     tar \
-    unixodbc unixodbc-dev \
-    zlib zlib-dev \
-  && update-ca-certificates --fresh
+    unzip \
+    zlib \
+    zlib-dev
 
 FROM deps_stage as erlang_stage
 
@@ -79,11 +76,13 @@ RUN set -xe \
       --without-orber \
       --without-percept \
       --without-typer \
+      --without-odbc \
+      --disable-hipe \
+      --enable-m64-build \
       --enable-threads \
       --enable-shared-zlib \
       --enable-ssl=dynamic-ssl-lib \
       --enable-kernel-poll \
-      --enable-hipe \
     && make -j$(getconf _NPROCESSORS_ONLN) \
     && make install ) \
   && rm -rf $ERL_TOP \
