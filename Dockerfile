@@ -5,8 +5,8 @@ LABEL maintainer="beardedeagle <randy@heroictek.com>"
 # Important!  Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images.
-ENV REFRESHED_AT=2020-10-23 \
-  OTP_VER=23.1.1 \
+ENV REFRESHED_AT=2020-11-05 \
+  OTP_VER=23.1.2 \
   REBAR3_VER=3.14.1 \
   TERM=xterm \
   LANG=C.UTF-8
@@ -16,7 +16,8 @@ RUN set -xe \
   && apk --no-cache upgrade \
   && apk add --no-cache bash git openssl zlib \
   && rm -rf /root/.cache \
-  && rm -rf /var/cache/apk/*
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /tmp/*
 
 FROM base_stage as deps_stage
 
@@ -29,9 +30,7 @@ RUN set -xe \
     g++ \
     gcc \
     make \
-    musl \
     musl-dev \
-    ncurses \
     ncurses-dev \
     openssl-dev \
     rsync \
@@ -44,7 +43,7 @@ FROM deps_stage as erlang_stage
 
 RUN set -xe \
   && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-${OTP_VER}.tar.gz" \
-  && OTP_DOWNLOAD_SHA256="8094484d94bce21d76f3a6c6137098839e7bc121e170c08b472f980296684ac9" \
+  && OTP_DOWNLOAD_SHA256="afff83ab51830cb7d9ed995d0c98a3947896471cde9af000befd78b390f109be" \
   && curl -fSL -o otp-src.tar.gz "${OTP_DOWNLOAD_URL}" \
   && echo "${OTP_DOWNLOAD_SHA256}  otp-src.tar.gz" | sha256sum -c - \
   && export ERL_TOP="/usr/src/otp_src_${OTP_VER%%@*}" \
@@ -112,7 +111,8 @@ RUN set -xe \
   && rsync -a /opt/rebar3/ /usr/local \
   && apk del .build-deps \
   && rm -rf /root/.cache \
-  && rm -rf /var/cache/apk/*
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /tmp/*
 
 FROM base_stage
 
